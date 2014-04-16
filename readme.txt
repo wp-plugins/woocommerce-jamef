@@ -4,7 +4,7 @@ Donate link: http://paulor.com.br/doacoes/
 Tags: shipping, delivery, woocommerce, jamef
 Requires at least: 3.5
 Tested up to: 3.8
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +128,10 @@ Este plugin utiliza o Webservices da Jamef para calcular o frete e quando este t
 2. O Webservices da Jamef enviou um valor errado!
 
 == Changelog ==
+
+= 1.1.0 =
+
+* Atualizada lista de unidades
 
 = 1.0.0 =
 
