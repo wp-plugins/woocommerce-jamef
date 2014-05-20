@@ -559,7 +559,7 @@ class WC_Jamef extends WC_Shipping_Method {
 		$rates  = array();
 		$quotes = $this->jamef_quote( $package );
 
-		if ( $quotes ) {
+		if ( $quotes > 0 ) {
 
 			$cust = $this->fix_format( esc_attr( $quotes ) );
 			$fee = $this->get_fee( $this->fix_format( $this->fee ), $cust );
@@ -567,8 +567,8 @@ class WC_Jamef extends WC_Shipping_Method {
 			array_push(
 				$rates,
 				array(
-					'id'    => 'Jamef',
-					'label' => 'Jamef',
+					'id'    => $this->title,
+					'label' => $this->title,
 					'cost'  => $cust + $fee,
 				)
 			);
