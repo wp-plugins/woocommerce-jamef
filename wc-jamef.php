@@ -5,7 +5,7 @@
  * Description: Jamef para WooCommerce
  * Author: pauloiankoski
  * Author URI: http://paulor.com.br/
- * Version: 1.2
+ * Version: 1.2.1
  * License: GPLv2 or later
  * Text Domain: wcjamef
  * Domain Path: /languages/

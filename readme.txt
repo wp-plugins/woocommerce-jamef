@@ -3,8 +3,8 @@ Contributors: pauloiankoski
 Donate link: http://paulor.com.br/doacoes/
 Tags: shipping, delivery, woocommerce, jamef
 Requires at least: 3.5
-Tested up to: 3.8
-Stable tag: 1.2
+Tested up to: 3.9.1
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +128,15 @@ Este plugin utiliza o Webservices da Jamef para calcular o frete e quando este t
 2. O Webservices da Jamef enviou um valor errado!
 
 == Changelog ==
+
+= 1.2.1 =
+
+* Correção na recuperação do valor do frete na Jamef.
+
+= 1.2.0 =
+
+* Corrigido par aque não exiba a opção de frete Jamef quando a cidade de destino não for atendida.
+* Alterado para que exiba o título configurado como nome do método de entrega.
 
 = 1.1.0 =
 
