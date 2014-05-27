@@ -463,10 +463,10 @@ class WC_Jamef extends WC_Shipping_Method {
 			$result = $response['body'];
 
 			if ( 'yes' == $this->debug ) {
-				$this->log->add( 'jamef', 'Jamef WebServices response: ' . print_r( substr($result, 17, -4), true ) );
+				$this->log->add( 'jamef', 'Jamef WebServices response: ' . print_r( substr($result, 17), true ) );
 			}
 
-			$quotes = substr($result, 17, -4);
+			$quotes = substr($result, 17);
 		} else {
 			if ( 'yes' == $this->debug ) {
 				$this->log->add( 'jamef', 'Error accessing the Jamef WebServices: ' . $response['response']['code'] . ' - ' . $response['response']['message'] );
