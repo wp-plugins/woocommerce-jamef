@@ -22,7 +22,7 @@ class WC_Jamef extends WC_Shipping_Method {
 	 */
 	public function init() {
 		// Jamef Web Service.
-		$this->webservice = 'http://www.jamef.com.br/internet/e-comerce/calculafrete.asp?';
+		$this->webservice = 'http://www.jamef.com.br/jamef/cotacaoFrete.do?eCommerce=true&';
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -425,15 +425,10 @@ class WC_Jamef extends WC_Shipping_Method {
 		$unit_origin,
 		$state_origin,
 		$zip_destination,
-		$height,
-		$width,
-		$diameter,
-		$length,
+		$cubage,
 		$weight,
 		$declared       = 0,
 		$receipt_notice = 'N' ) {
-
-		$cubage = str_replace('.', ',', ($width * $height * $length) / 1000000);
 
 		$quotes = array();
 
@@ -463,10 +458,10 @@ class WC_Jamef extends WC_Shipping_Method {
 			$result = $response['body'];
 
 			if ( 'yes' == $this->debug ) {
-				$this->log->add( 'jamef', 'Jamef WebServices response: ' . print_r( substr($result, 17), true ) );
+				$this->log->add( 'jamef', 'Jamef WebServices response: ' . print_r( substr($result, 13), true ) );
 			}
 
-			$quotes = substr($result, 17);
+			$quotes = substr($result, 13);
 		} else {
 			if ( 'yes' == $this->debug ) {
 				$this->log->add( 'jamef', 'Error accessing the Jamef WebServices: ' . $response['response']['code'] . ' - ' . $response['response']['message'] );
@@ -484,7 +479,6 @@ class WC_Jamef extends WC_Shipping_Method {
 	 * @return array          Jamef Quotes.
 	 */
 	protected function jamef_quote( $package ) {
-		include_once WOO_JAMEF_PATH . 'includes/class-wc-jamef-cubage.php';
 
 		// Proccess measures.
 		$measures = apply_filters( 'wcjamef_default_package', $this->measures_extract( $package ) );
@@ -493,8 +487,16 @@ class WC_Jamef extends WC_Shipping_Method {
 		if ( ! empty( $measures['height'] ) && ! empty( $measures['width'] ) && ! empty( $measures['length'] ) ) {
 
 			// Get the Cubage.
-			$cubage = new WC_Jamef_Cubage( $measures['height'], $measures['width'], $measures['length'] );
-			$totalcubage = $cubage->cubage();
+			$all   = array();
+			$total = '';
+
+			for ( $i = 0; $i < count( $this->height ); $i++ ) {
+				$all[ $i ] = ( $measures['height'][ $i ] * $measures['width'][ $i ] * $measures['length'][ $i ] ) / 1000000;
+			}
+
+			foreach ( $all as $value ) {
+				$totalcubage += $value;
+			}
 
 			$zip_destination = $package['destination']['postcode'];
 
@@ -503,20 +505,11 @@ class WC_Jamef extends WC_Shipping_Method {
 			$min_width  = $this->minimum_width;
 			$min_length = $this->minimum_length;
 
-			$height = ( $totalcubage['height'] < $min_height ) ? $min_height : $totalcubage['height'];
-			$width  = ( $totalcubage['width'] < $min_width ) ? $min_width : $totalcubage['width'];
-			$length = ( $totalcubage['length'] < $min_length ) ? $min_length : $totalcubage['length'];
+			$test_cubage = ( $min_height * $min_width * $min_length ) / 1000000;
+			if( $totalcubage < $test_cubage )
+				$totalcubage = $test_cubage;
 
-			if ( 'yes' == $this->debug ) {
-				$weight_cubage = array(
-					'weight' => $measures['weight'],
-					'height' => $height,
-					'width'  => $width,
-					'length' => $length
-				);
-
-				$this->log->add( 'jamef', 'Weight and cubage of the order: ' . print_r( $weight_cubage, true ) );
-			}
+			$cubage = str_replace( '.', ',', $totalcubage );
 
 			$declared = 0;
 			$declared = number_format( $this->woocommerce_method()->cart->cart_contents_total, 2, ',', '' );
@@ -527,10 +520,7 @@ class WC_Jamef extends WC_Shipping_Method {
 				$this->settings['unit_origin'],
 				$this->settings['state_origin'],
 				$zip_destination,
-				$height,
-				$width,
-				0,
-				$length,
+				$cubage,
 				$measures['weight'],
 				$declared
 			);
