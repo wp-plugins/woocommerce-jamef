@@ -330,7 +330,7 @@ class WC_Jamef extends WC_Shipping_Method {
 	 *
 	 * @return float
 	 */
-	public static function get_fee( $fee, $total ) {
+	public function get_fee( $fee, $total ) {
 		if ( strstr( $fee, '%' ) ) {
 			$fee = ( $total / 100 ) * str_replace( '%', '', $fee );
 		}
