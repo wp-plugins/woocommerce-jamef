@@ -323,6 +323,22 @@ class WC_Jamef extends WC_Shipping_Method {
 	}
 
 	/**
+	 * Get fee.
+	 *
+	 * @param  mixed $fee
+	 * @param  mixed $total
+	 *
+	 * @return float
+	 */
+	public function get_fee( $fee, $total ) {
+		if ( strstr( $fee, '%' ) ) {
+			$fee = ( $total / 100 ) * str_replace( '%', '', $fee );
+		}
+
+		return $fee;
+	}
+
+	/**
 	 * Extracts the weight and dimensions from the order.
 	 *
 	 * @param array $package
@@ -568,6 +584,8 @@ class WC_Jamef extends WC_Shipping_Method {
 			// Register the rate.
 			foreach ( $rate as $key => $value )
 				$this->add_rate( $value );
+		} else {
+			$woocommerce->add_error( 'Desculpe, sua região ainda não é atendida por nossa transportadora!' );
 		}
 	}
 }
