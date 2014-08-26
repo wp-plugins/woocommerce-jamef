@@ -570,22 +570,26 @@ class WC_Jamef extends WC_Shipping_Method {
 			$cust = $this->fix_format( esc_attr( $quotes ) );
 			$fee = $this->get_fee( $this->fix_format( $this->fee ), $cust );
 
-			array_push(
-				$rates,
-				array(
-					'id'    => $this->title,
-					'label' => $this->title,
-					'cost'  => $cust + $fee,
-				)
-			);
+			$total_cost = $cust + $fee;
 
-			$rate = apply_filters( 'woocommerce_jamef_shipping_methods', $rates, $package );
+			if( $total_cost > 0 ) {
 
-			// Register the rate.
-			foreach ( $rate as $key => $value )
-				$this->add_rate( $value );
-		} else {
-			$woocommerce->add_error( 'Desculpe, sua região ainda não é atendida por nossa transportadora!' );
+				array_push(
+					$rates,
+					array(
+						'id'    => $this->title,
+						'label' => $this->title,
+						'cost'  => $cust + $fee,
+					)
+				);
+
+				$rate = apply_filters( 'woocommerce_jamef_shipping_methods', $rates, $package );
+
+				// Register the rate.
+				foreach ( $rate as $key => $value )
+					$this->add_rate( $value );
+
+			}
 		}
 	}
 }
