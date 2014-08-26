@@ -323,6 +323,22 @@ class WC_Jamef extends WC_Shipping_Method {
 	}
 
 	/**
+	 * Get fee.
+	 *
+	 * @param  mixed $fee
+	 * @param  mixed $total
+	 *
+	 * @return float
+	 */
+	public function get_fee( $fee, $total ) {
+		if ( strstr( $fee, '%' ) ) {
+			$fee = ( $total / 100 ) * str_replace( '%', '', $fee );
+		}
+
+		return $fee;
+	}
+
+	/**
 	 * Extracts the weight and dimensions from the order.
 	 *
 	 * @param array $package
@@ -554,20 +570,26 @@ class WC_Jamef extends WC_Shipping_Method {
 			$cust = $this->fix_format( esc_attr( $quotes ) );
 			$fee = $this->get_fee( $this->fix_format( $this->fee ), $cust );
 
-			array_push(
-				$rates,
-				array(
-					'id'    => $this->title,
-					'label' => $this->title,
-					'cost'  => $cust + $fee,
-				)
-			);
+			$total_cost = $cust + $fee;
 
-			$rate = apply_filters( 'woocommerce_jamef_shipping_methods', $rates, $package );
+			if( $total_cost > 0 ) {
 
-			// Register the rate.
-			foreach ( $rate as $key => $value )
-				$this->add_rate( $value );
+				array_push(
+					$rates,
+					array(
+						'id'    => $this->title,
+						'label' => $this->title,
+						'cost'  => $cust + $fee,
+					)
+				);
+
+				$rate = apply_filters( 'woocommerce_jamef_shipping_methods', $rates, $package );
+
+				// Register the rate.
+				foreach ( $rate as $key => $value )
+					$this->add_rate( $value );
+
+			}
 		}
 	}
 }
