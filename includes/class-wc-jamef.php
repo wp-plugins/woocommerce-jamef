@@ -33,9 +33,6 @@ class WC_Jamef extends WC_Shipping_Method {
 		// Define user set variables.
 		$this->enabled            = $this->settings['enabled'];
 		$this->title              = $this->settings['title'];
-		//$this->declare_value      = $this->settings['declare_value'];
-		//$this->display_date       = $this->settings['display_date'];
-		//$this->additional_time    = $this->settings['additional_time'];
 		$this->availability       = $this->settings['availability'];
 		$this->fee                = $this->settings['fee'];
 		$this->zip_origin         = $this->settings['zip_origin'];
@@ -165,31 +162,6 @@ class WC_Jamef extends WC_Shipping_Method {
 				'default'          => 'SP',
 				'options'          => $this->woocommerce_method()->countries->states['BR']
 			),
-			/*'declare_value' => array(
-				'title'            => __( 'Declare value', 'wcjamef' ),
-				'type'             => 'select',
-				'default'          => 'none',
-				'options'          => array(
-					'declare'      => __( 'Declare', 'wcjamef' ),
-					'none'         => __( 'None', 'wcjamef' )
-				),
-			),
-			'display_date' => array(
-				'title'            => __( 'Estimated delivery', 'wcjamef' ),
-				'type'             => 'checkbox',
-				'label'            => __( 'Enable', 'wcjamef' ),
-				'description'      => __( 'Display date of estimated delivery.', 'wcjamef' ),
-				'desc_tip'         => true,
-				'default'          => 'no'
-			),
-			'additional_time' => array(
-				'title'            => __( 'Additional days', 'wcjamef' ),
-				'type'             => 'text',
-				'description'      => __( 'Additional days to the estimated delivery.', 'wcjamef' ),
-				'desc_tip'         => true,
-				'default'          => '0',
-				'placeholder'      => '0'
-			),*/
 			'fee' => array(
 				'title'            => __( 'Handling Fee', 'wcjamef' ),
 				'type'             => 'text',
@@ -244,9 +216,6 @@ class WC_Jamef extends WC_Shipping_Method {
 	 * @return void
 	 */
 	public function admin_options() {
-		// Call the admin scripts.
-		//wp_enqueue_script( 'wc-jamef', WOO_JAMEF_URL . 'js/admin.js', array( 'jquery' ), '', true );
-
 		echo '<h3>' . $this->method_title . '</h3>';
 		echo '<p>' . __( 'Jamef is a brazilian delivery method.', 'wcjamef' ) . '</p>';
 		echo '<table class="form-table">';
@@ -506,7 +475,7 @@ class WC_Jamef extends WC_Shipping_Method {
 			$all   = array();
 			$total = '';
 
-			for ( $i = 0; $i < count( $this->height ); $i++ ) {
+			for ( $i = 0; $i < count( $measures['height'] ); $i++ ) {
 				$all[ $i ] = ( $measures['height'][ $i ] * $measures['width'][ $i ] * $measures['length'][ $i ] ) / 1000000;
 			}
 

@@ -5,7 +5,7 @@
  * Description: Jamef para WooCommerce
  * Author: pauloiankoski
  * Author URI: http://paulor.com.br/
- * Version: 1.3.3
+ * Version: 1.3.4
  * License: GPLv2 or later
  * Text Domain: wcjamef
  * Domain Path: /languages/
@@ -67,10 +67,6 @@ function wcjamef_shipping_load() {
 
 	// WC_Jamef class.
 	include_once WOO_JAMEF_PATH . 'includes/class-wc-jamef.php';
-
-	// Metabox.
-	//include_once WOO_JAMEF_PATH . 'includes/class-wc-jamef-tracking.php';
-	//$wc_jamef_metabox = new WC_Jamef_Tracking;
 }
 
 add_action( 'plugins_loaded', 'wcjamef_shipping_load', 0 );
