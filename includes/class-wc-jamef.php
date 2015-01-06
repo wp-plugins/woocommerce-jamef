@@ -22,7 +22,7 @@ class WC_Jamef extends WC_Shipping_Method {
 	 */
 	public function init() {
 		// Jamef Web Service.
-		$this->webservice = 'http://www.jamef.com.br/jamef/cotacaoFrete.do?eCommerce=true&';
+		$this->webservice = 'http://www.jamef.com.br/internet/e-comerce/calculafrete_xml.asp?';
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -440,13 +440,15 @@ class WC_Jamef extends WC_Shipping_Method {
 				$this->log->add( 'jamef', 'WP_Error: ' . $response->get_error_message() );
 			}
 		} elseif ( $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
-			$result = $response['body'];
+			$body = wp_remote_retrieve_body($response);
+			$xml  = simplexml_load_string($body);
+			$result = $xml->frete->valor;
 
 			if ( 'yes' == $this->debug ) {
-				$this->log->add( 'jamef', 'Jamef WebServices response: ' . print_r( substr($result, 13), true ) );
+				$this->log->add( 'jamef', 'Jamef WebServices response: ' . print_r( $xml, true ) );
 			}
 
-			$quotes = substr($result, 13);
+			$quotes = $result;
 		} else {
 			if ( 'yes' == $this->debug ) {
 				$this->log->add( 'jamef', 'Error accessing the Jamef WebServices: ' . $response['response']['code'] . ' - ' . $response['response']['message'] );
